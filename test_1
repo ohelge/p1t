@@ -1,0 +1,77 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import time, re
+from uiTest.fixture import config_data, browser_name
+
+def login(wd, userName, passWord):
+    wd.get(config_data()['server']['url'])
+    WebDriverWait(wd, 2).until(lambda x: x.find_element_by_id("login-loginButton"))
+    time.sleep(0.2)
+    wd.get_screenshot_as_file('screen_shots/' + browser +'_' + 'login' + '.png')
+    assert 'Connode Server' in wd.title
+    wd.find_element_by_name('username').send_keys(userName)
+    wd.find_element_by_name('password').send_keys(passWord + Keys.RETURN)
+    WebDriverWait(wd, 2).until(lambda x: x.find_element_by_css_selector('article[data-view="dashboard"]'))
+    time.sleep(0.2)
+    wd.get_screenshot_as_file('screen_shots/' + browser +'_' + 'login' + '_after' + '.png')
+def menu_item_click(wd, item_list):
+    for item in item_list:
+        wd.find_element_by_css_selector('li[data-menu=' + item + '] a ').click()
+        WebDriverWait(wd, 2).until(lambda x: x.find_element_by_css_selector('article[data-view=' + item + ']'))
+        time.sleep(0.2)
+        wd.get_screenshot_as_file('screen_shots/' + browser + '_' + item + '.png')
+
+def menu_sub_item_click(wd, item_sub_list):
+    for item in item_sub_list:
+        wd.get(config_data()['server']['url'] + '#' + item)
+        WebDriverWait(wd, 2).until(lambda x: x.find_element_by_css_selector('article[data-view=' + item + ' ]'))
+        time.sleep(0.2)
+        wd.get_screenshot_as_file('screen_shots/' + browser + '_' + item + '.png')
+
+def logout(wd):
+    wd.get(config_data()['server']['url'] + 'logout')
+    WebDriverWait(wd, 2).until(lambda x: x.find_element_by_id("login-loginButton"))
+    time.sleep(0.2)
+    wd.get_screenshot_as_file('screen_shots/' + browser + '_' + 'logout' + '.png')
+
+
+def test_1(wd_ff):
+    global browser
+    browser= browser_name('ff')
+    login(wd_ff, 'sysadmin', 'sysadmin')
+    menu_item_click(wd_ff, ["dashboard", "nodes", "groups", "jobs", "files"])
+    menu_sub_item_click(wd_ff,
+                        ["configs", "profileConfigs", "deviceAlarmsConfigs", "ha", "pki", "licenseReports",
+                         "nodeWhitelist",
+                         "nodeBlacklist", "serverAlarmStates", "serverAlarms", "serverConfig",
+                         "users", "roles", "paramAccess", "profile"])
+    logout(wd_ff)
+
+def test_2(wd_chrome):
+    global browser
+    browser = browser_name('chrome')
+    login(wd_chrome, 'sysadmin', 'sysadmin')
+    menu_item_click(wd_chrome, ["dashboard", "nodes", "groups", "jobs", "files"])
+    menu_sub_item_click(wd_chrome,
+                        ["configs", "profileConfigs", "deviceAlarmsConfigs", "ha", "pki", "licenseReports",
+                         "nodeWhitelist",
+                         "nodeBlacklist", "serverAlarmStates", "serverAlarms", "serverConfig",
+                         "users", "roles", "paramAccess", "profile"])
+    logout(wd_chrome)
+
+
+
+    # if __name__ == "__main__":
+    #    unittest.main()
+    # try:
+    #    WebDriverWait(wd, 3).until(EC.presence_of_element_located((By.ID,"login-loginButton")))
+    #    print "Login page is ready!"
+    # except TimeoutException:
+    #    print "Loading took too much time!"
+    # WebDriverWait(wd, 2).until(lambda x: x.find_element_by_css_selector('.page_title.node').get_attribute('textContent')=='Login'  )
