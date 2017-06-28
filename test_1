@@ -7,7 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time, re
-from uiTest.fixture import config_data, browser_name
+from uiTest.fixture import config_data, browser_name, wd_ff, wd_chrome
 
 def login(wd, userName, passWord):
     wd.get(config_data()['server']['url'])
