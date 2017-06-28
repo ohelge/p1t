@@ -1,0 +1,32 @@
+import pytest, json, os
+from selenium import webdriver
+
+def config_data():
+    global config
+    with open('config.json') as config_file:
+        config = json.load(config_file)
+    return config
+def browser_name(brName):
+    brName = config_data()[brName]['browserName']
+    return brName
+
+@pytest.fixture
+def wd_ff(request):
+    fp = webdriver.FirefoxProfile()
+    fp.set_preference("browser.download.dir", os.getcwd())
+    driver = webdriver.Remote(config_data()['server']['url_remote'] , webdriver.DesiredCapabilities.FIREFOX.copy() )
+    driver.implicitly_wait(10)
+    driver.maximize_window()
+    request.addfinalizer(driver.quit)
+    return driver
+
+
+@pytest.fixture
+def wd_chrome(request):
+    co = webdriver.ChromeOptions()
+    co.add_argument("--disable-extensions")
+    driver = webdriver.Remote(config_data()['server']['url_remote'], desired_capabilities=co.to_capabilities())
+    driver.implicitly_wait(10)
+    driver.maximize_window()
+    request.addfinalizer(driver.quit)
+    return driver
