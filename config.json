@@ -1,0 +1,26 @@
+{
+  "server": {
+    "url": "https://localhost/",
+    "url_remote": "http://localhost:4444/wd/hub"
+  },
+  "ff": {
+ "browserName": "firefox",
+ "version" :"",
+ "platform":"LINUX",
+ "javascriptEnabled": "false",
+ "handlesAlerts":"true",
+ "locationContextEnabled":"true",
+ "cssSelectorsEnabled": "true"
+  },
+
+ "chrome":{
+ "browserName": "chrome",
+ "version" :"",
+ "platform":"LINUX",
+ "javascriptEnabled": "true",
+ "handlesAlerts":"true",
+ "locationContextEnabled":"true",
+ "cssSelectorsEnabled": "true"
+
+  }
+}
